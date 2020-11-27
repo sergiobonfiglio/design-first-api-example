@@ -1,0 +1,61 @@
+---
+openapi: 3.0.2
+info:
+    title: Example API
+    description: Example of design first approach API
+    version: 1.0.0
+servers:
+    -   url: '{protocol}://{environment}.example.org/v1'
+        variables:
+            protocol:
+                default: https
+                enum:
+                    - http
+                    - https
+            environment:
+                default: test
+                enum:
+                    - test
+                    - prod
+security:
+    -   ApiKeyAuth: [ ]
+paths:
+    /products:
+        get:
+            summary: Return all products
+            description: A list of all products
+            responses:
+                "200":
+                    description: An array of all available types of services
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Products'
+
+components:
+    schemas:
+        Product:
+            required:
+                - id
+                - name
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+        Products:
+            type: array
+            items:
+                $ref: '#/components/schemas/Product'
+            example:
+                - id: 1
+                  name: "Product 1"
+                - id: 2
+                  name: "Product 2"
+
+    securitySchemes:
+        ApiKeyAuth:
+            type: apiKey
+            name: X-API-KEY
+            in: header
